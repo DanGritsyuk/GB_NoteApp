@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 # My ignore files
-/Exercises/Homework3/Balabot/botMemory.json
 tasks.txt
 /.vscode
+notes.json

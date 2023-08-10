@@ -2,7 +2,7 @@ import os
 import sys
 import msvcrt
 import ctypes
-from NoteApp.View.ConsoleUI.MenuRender.Point2D import Point2D
+from View.ConsoleUI.MenuRender.Point2D import Point2D
 
 class ConsoleManager:
 
