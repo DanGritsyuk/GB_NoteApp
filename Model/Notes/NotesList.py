@@ -38,6 +38,9 @@ class NotesList:
         self.notes.append(note)
         self.save()
 
+    def get_id_and_titles(self) -> list[tuple[int, str]]:
+        return [(note.id, note.title) for note in self.notes]
+
     def get_note_by_id(self, id):
         for note in self.notes:
             if note.id == id:

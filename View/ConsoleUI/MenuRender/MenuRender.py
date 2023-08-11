@@ -6,35 +6,39 @@ from View.ConsoleUI.MenuRender.Point2D import Point2D
 
 
 class MenuRender:
+    
+    HEADER_LINE_COUNT = 2
+    LINE_MAX_CHARACTER_COUNT = 190
+
     @staticmethod
-    def StartRenderMenu(
+    def start_render_memu(
         menuData: dict[str, list[str]],
         index: int = 0,
         consoleLines: int = 0,
         isEscActive: bool = False,
         showHelpControl: bool = False,
         prefix: str = "> ",
-        prafixMark: str = "",
+        prefixMark: str = "",
     ) -> int:
-        HEADER_LINE_COUNT = 2
-        largestKey = MenuRender._LargestKeyTasks(menuData) + HEADER_LINE_COUNT + 1
-        consoleLines = largestKey if largestKey > consoleLines else consoleLines
 
-        def StartDraw():
-            MenuRender._DrawMenu(
+        largestKey = MenuRender._largest_key_tasks(menuData) + MenuRender.HEADER_LINE_COUNT + 1
+        consoleLines = largestKey + 1 if largestKey > consoleLines else consoleLines
+
+        def start_draw():
+            MenuRender._draw_menu(
                 page,
                 pageCount,
                 cursorStartPosition,
                 consoleLines,
                 showHelpControl,
                 prefix,
-                prafixMark,
+                prefixMark,
             )
 
-        def GetNextPage(_page: PageData, step: int) -> PageData:
-            ConsoleManager.SetCursorPosition(cursorStartPosition)
-            MenuRender._ClearConsoleText(
-                MenuRender._GetLargestLineLength(_page.pageData) + len(prefix),
+        def get_next_page(_page: PageData, step: int) -> PageData:
+            ConsoleManager.set_cursor_position(cursorStartPosition)
+            MenuRender._clear_console_text(
+                MenuRender._get_largest_line_length(_page.pageData) + len(prefix),
                 consoleLines,
             )
             currentIndex = _page.currentLineIndex
@@ -46,36 +50,36 @@ class MenuRender:
             )
             return _page
 
-        def GetCheckCoordinates() -> PageData:
+        def get_check_coordinates() -> PageData:
             for page in pagesMap:
                 if page.startLineIndex <= index < page.startLineIndex + page.linesCount:
                     page.currentLineIndex = index - page.startLineIndex
                     return page
             raise Exception("Page not found!")
 
-        def EndDraw(_page: PageData):
-            ConsoleManager.HideCursor(False)
-            ConsoleManager.SetCursorPosition(cursorStartPosition)
-            MenuRender._ClearConsoleText(
-                MenuRender._GetLargestLineLength(_page.pageData) + len(prefix),
+        def _end_draw(_page: PageData):
+            ConsoleManager.hide_cursor(False)
+            ConsoleManager.set_cursor_position(cursorStartPosition)
+            MenuRender._clear_console_text(
+                MenuRender._get_largest_line_length(_page.pageData, len(prefix), len(prefixMark)) + len(prefix),
                 consoleLines,
             )
-            ConsoleManager.SetCursorPosition(cursorStartPosition)
+            ConsoleManager.set_cursor_position(cursorStartPosition)
 
-        pagesMap = MenuRender._SplitDataToPages(
-            menuData, consoleLines, HEADER_LINE_COUNT
+        pagesMap = MenuRender._split_data_to_pages(
+            menuData, consoleLines, MenuRender.HEADER_LINE_COUNT
         )
-        page = GetCheckCoordinates()
+        page = get_check_coordinates()
         pageCount = len(pagesMap)
 
-        cursorStartPosition = ConsoleManager.GetCursorCoordinate()
-        StartDraw()
+        cursorStartPosition = ConsoleManager.get_cursor_coordinate()
+        start_draw()
         while True:
-            ConsoleManager.HideCursor(True)
+            ConsoleManager.hide_cursor(True)
             key = ConsoleManager.GetKeyEvent()
             match key:
                 case "enter":
-                    EndDraw(page)
+                    _end_draw(page)
                     return page.currentLineIndex + page.startLineIndex + 1
                 case "up":
                     if page.currentLineIndex > 0:
@@ -85,18 +89,18 @@ class MenuRender:
                         page.currentLineIndex += 1
                 case "left":
                     if page.pageId > 1:
-                        page = GetNextPage(page, -1)
+                        page = get_next_page(page, -1)
                 case "rigth":
                     if page.pageId < pageCount:
-                        page = GetNextPage(page, 1)
+                        page = get_next_page(page, 1)
                 case "esc":
                     if isEscActive:
-                        EndDraw(page)
+                        _end_draw(page)
                         return 0
-            StartDraw()
+            start_draw()
 
     @staticmethod
-    def _SplitDataToPages(
+    def _split_data_to_pages(
         menuData: dict[str, list[str]], linesPage: int, headerLineCount: int
     ) -> set():
         pageLineCount = 0
@@ -120,7 +124,7 @@ class MenuRender:
         return pagesMap
 
     @staticmethod
-    def _DrawMenu(
+    def _draw_menu(
         page: PageData,
         pagesCount: int,
         cursorStartPosition: Point2D,
@@ -129,28 +133,33 @@ class MenuRender:
         prefix: str,
         prefixMark: str,
     ):
-        ConsoleManager.SetCursorPosition(cursorStartPosition)
+        def shortMenuLine(line) -> str:
+                if len(line) > MenuRender.LINE_MAX_CHARACTER_COUNT:
+                    return line[:MenuRender.LINE_MAX_CHARACTER_COUNT-3] + "..."
+                return line
+        ConsoleManager.set_cursor_position(cursorStartPosition)
         blockIdCount = 0
-        largestLine = int(MenuRender._GetLargestLineLength(page.pageData))
+        largestLine = int(MenuRender._get_largest_line_length(page.pageData, len(prefix), len(prefixMark)))
         for key in page.pageData:
             if blockIdCount > 0:
                 print()
-            print(f"{key}")
+            print(shortMenuLine(key))
             for i, line in enumerate(page.pageData[key]):
+                prToConsole = ''
                 i += blockIdCount
                 isSelected = i == page.currentLineIndex
                 if isSelected:
-                    MenuRender._ClearLineText(largestLine)
+                    MenuRender._clear_line_text(largestLine)
                 if prefixMark == "":
                     prToConsole = prefix if isSelected else str(" " * len(prefix))
-                    print(f"{prToConsole}{line}")
+                    prToConsole = f"{prToConsole}{line}"
                 else:
                     prToConsole = (
                         line.replace(prefixMark, prefix)
                         if isSelected
                         else line.replace(prefixMark, str(" " * len(prefixMark)))
                     )
-                    print(f"{prToConsole}")
+                print(shortMenuLine(prToConsole))
             blockIdCount += len(page.pageData[key])
         if showHelpControl:
             strPageNumbers = ""
@@ -193,18 +202,22 @@ class MenuRender:
         return count
 
     @staticmethod
-    def _GetLargestLineLength(menuData: dict[str, list[str]]):
+    def _get_largest_line_length(menuData: dict[str, list[str]], lenPeffix: int, lenPrMark: int) -> int:
         largesLineLength = 0
-        for _, value in menuData.items():
-            if len(value) == 0:
+        for key, value in menuData.items():
+            len_key = len(key)
+            if largesLineLength < len_key:
+                largesLineLength == len_key
+            if not isinstance(value, list) or not all(isinstance(line, str) for line in value):
                 continue
             maxLength = max([len(line) for line in value])
+            maxLength += lenPeffix if lenPeffix > lenPrMark else lenPrMark
             if largesLineLength < maxLength:
                 largesLineLength = maxLength
-        return largesLineLength
+        return largesLineLength if largesLineLength > MenuRender.LINE_MAX_CHARACTER_COUNT else MenuRender.LINE_MAX_CHARACTER_COUNT
 
     @staticmethod
-    def _LargestKeyTasks(menuData: dict[str, list[str]]) -> int:
+    def _largest_key_tasks(menuData: dict[str, list[str]]) -> int:
         largesKeyTasks = 0
         for key in menuData:
             lengthKeyTasks = len(menuData[key])
@@ -214,12 +227,12 @@ class MenuRender:
         return largesKeyTasks
 
     @staticmethod
-    def _ClearConsoleText(charsCount: int, linesCount: int):
+    def _clear_console_text(charsCount: int, linesCount: int):
         for _ in range(linesCount):
             print(" " * charsCount)
 
     @staticmethod
-    def _ClearLineText(lineCount: int):
-        pointCursor = ConsoleManager.GetCursorCoordinate()
+    def _clear_line_text(lineCount: int):
+        pointCursor = ConsoleManager.get_cursor_coordinate()
         print(" " * lineCount)
-        ConsoleManager.SetCursorPosition(pointCursor)
+        ConsoleManager.set_cursor_position(pointCursor)

@@ -1,9 +1,11 @@
 import string
+from Model.Presenter import Presenter
 from View.View import View
 
 
 class TextCommandUI(View):
     def startup(self):
+        self.presenter = Presenter(self)
         while True:
             command = self.get_command()
             if command == "quit":

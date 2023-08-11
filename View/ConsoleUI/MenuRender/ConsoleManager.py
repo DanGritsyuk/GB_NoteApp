@@ -7,7 +7,7 @@ from View.ConsoleUI.MenuRender.Point2D import Point2D
 class ConsoleManager:
 
     @staticmethod
-    def GetCursorCoordinate() -> Point2D:
+    def get_cursor_coordinate() -> Point2D:
         print('\033[A\033[6n')
         buff = ''
 
@@ -33,8 +33,8 @@ class ConsoleManager:
         )
 
     @staticmethod
-    def SetCursorPosition(toPosition: Point2D):
-        correntPosition = ConsoleManager.GetCursorCoordinate()
+    def set_cursor_position(toPosition: Point2D):
+        correntPosition = ConsoleManager.get_cursor_coordinate()
 
         yDistance = correntPosition.y - toPosition.y
         if yDistance > 0:
@@ -67,7 +67,7 @@ class ConsoleManager:
         print(text)
 
     @staticmethod
-    def HideCursor(isHidden: bool) -> str:
+    def hide_cursor(isHidden: bool) -> str:
         if os.name == 'nt':
             ci = _CursorInfo()
             handle = ctypes.windll.kernel32.GetStdHandle(-11)

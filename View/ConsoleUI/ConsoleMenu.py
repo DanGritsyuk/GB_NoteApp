@@ -85,7 +85,7 @@ class ConsoleMenu:
         self.runMenu = False
 
     @staticmethod
-    def content_menu(items_menu, headerText):
+    def content_menu(items_menu: list[str], headerText):
         menuData = {}
         namesOnPage = []
         pageNumber = 0
@@ -116,10 +116,10 @@ class ConsoleMenu:
 
     @staticmethod
     def _draw_menu(menuData, taskId, console_lines):
-        return MenuRender.StartRenderMenu(
+        return MenuRender.start_render_memu(
             menuData, taskId - 1, console_lines, True, True
         )
 
     @staticmethod
     def _draw_dialog_menu(menuData, taskIndex):
-        return MenuRender.StartRenderMenu(menuData, taskIndex, 0, False, False)
+        return MenuRender.start_render_memu(menuData, taskIndex, 0, False, False)

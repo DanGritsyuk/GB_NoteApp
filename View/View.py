@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
-from Model.Presenter import Presenter
+
 
 
 class View(ABC):
     def __init__(self):
-        self.presenter = Presenter(self)
         pass
 
     @abstractmethod
