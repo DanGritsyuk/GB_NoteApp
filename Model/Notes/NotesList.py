@@ -1,6 +1,7 @@
 
 from datetime import datetime
 import json
+from Model.Notes.Comporators.NoteComparatorByUpdateDate import NoteComparatorByUpdateDate
 
 from Model.Notes.Note import Note
 
@@ -8,7 +9,7 @@ from Model.Notes.Note import Note
 class NotesList:
     def __init__(self):
         self.filename = "notes.json"
-        self.notes = []
+        self.notes : list[Note] = []
         self.load()
 
     def load(self):
@@ -38,10 +39,10 @@ class NotesList:
         self.notes.append(note)
         self.save()
 
-    def get_id_and_titles(self) -> list[tuple[int, str]]:
-        return [(note.id, note.title) for note in self.notes]
+    def get_notes_data_for_menu(self) -> list[tuple[int, str]]:
+        return [(note.id, f'{note.updated.date()}: {note.title}') for note in self.notes]
 
-    def get_note_by_id(self, id):
+    def get_note_by_id(self, id) -> Note:
         for note in self.notes:
             if note.id == id:
                 return note
@@ -60,3 +61,6 @@ class NotesList:
         if note:
             self.notes.remove(note)
             self.save()
+
+    def sort_by_updated_date(self):
+        self.notes.sort(key=NoteComparatorByUpdateDate.compare_notes_by_updated_date, reverse=True)

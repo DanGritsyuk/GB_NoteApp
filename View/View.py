@@ -15,13 +15,13 @@ class View(ABC):
         pass
 
     @abstractmethod
-    def get_command(self):
-        pass
-
-    @abstractmethod
     def ask_note_data(self) -> (str, str):
         pass
 
     @abstractmethod
     def ask_note_id(self, notes) -> int:
+        pass
+
+    @abstractmethod
+    def show_message(self, message: str):
         pass

@@ -15,11 +15,10 @@ class ConsoleUI(View):
             self._started_menu()
 
     def show_notes(self, info: str):
-        print(self.presenter.select_note())
-        input()
-
-    def get_command(self):
-        return input('Enter command: ')
+        note_data = self.presenter.select_note()
+        if note_data != None:
+            print(note_data)
+            input()
 
     def ask_note_data(self) -> (str, str):
         title = input('Введите заголовок заметки: ')
@@ -27,12 +26,17 @@ class ConsoleUI(View):
         return title, body
 
     def ask_note_id(self, data: list[tuple[int, str]]) -> int:
-        menu_lines = [str]
+        menu_lines = []
         for item in data:
             menu_lines.append(item[1])
         index = ConsoleMenu.content_menu(menu_lines, 'ЗАМЕТКИ')
         if index >= 0:
             return data[index][0]
+    
+    def show_message(self, message: str):
+        self._draw_header()
+        print(message)
+        input('Нажмите Enter ↵ ')
 
     def _started_menu(self):
         menu_data = {'ГЛАВНОЕ МЕНЮ:': ['НОВАЯ ЗАМЕТКА', 'НАЙТИ ЗАМЕТКУ', 'ВСЕ ЗАМЕТКИ'], '-------': ['ВЫХОД']}
@@ -69,6 +73,5 @@ class ConsoleUI(View):
         self._draw_header()
 
     def _method_stub(self):
-        print('Функция в разработке...')
-        input('Нажмите Enter ↵ ')
+        self.show_message('Функция в разработке...')
         self._draw_header()

@@ -23,6 +23,11 @@ class Presenter:
             self.model.delete_note_by_id(id)
 
     def select_note(self):
-        notes_titles = self.model.get_id_and_titles()
-        id = self.view.ask_note_id(notes_titles)
-        return self.model.get_note_by_id(id).__str__()
+        self.model.sort_by_updated_date()
+        notes_titles = self.model.get_notes_data_for_menu()
+        if len(notes_titles) == 0:
+            self.view.show_message('Список заметок пуст.')
+        else:
+            id = self.view.ask_note_id(notes_titles)
+            if id != None:
+                return self.model.get_note_by_id(id).__str__()

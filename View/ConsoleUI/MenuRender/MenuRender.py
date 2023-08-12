@@ -38,7 +38,7 @@ class MenuRender:
         def get_next_page(_page: PageData, step: int) -> PageData:
             ConsoleManager.set_cursor_position(cursorStartPosition)
             MenuRender._clear_console_text(
-                MenuRender._get_largest_line_length(_page.pageData) + len(prefix),
+                MenuRender._get_largest_line_length(_page.pageData, len(prefix), len(prefixMark)) + len(prefix),
                 consoleLines,
             )
             currentIndex = _page.currentLineIndex

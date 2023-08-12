@@ -10,7 +10,7 @@ class Note:
         self.updated = updated or self.created
 
     def __str__(self):
-        return f"{self.title.upper()}\n{self.body}\nДата создания: {self.created}\nДата изменения: {self.updated}\n"
+        return f"{self.title.upper()}\n{self.body}\n\nДата создания:  {self.created}\nДата изменения: {self.updated}\n"
 
     def to_dict(self):
         return {
