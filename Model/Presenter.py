@@ -10,7 +10,7 @@ class Presenter:
 
     def run_command(self, command: str):
         if command == "list":
-            self.view.show_notes(self.model.notes.__str__())
+            self.view.show_notes()
         elif command == "add":
             title, body = self.view.ask_note_data()
             self.model.add_note(title, body)
@@ -19,8 +19,10 @@ class Presenter:
             title, body = self.view.ask_note_data()
             self.model.update_note_by_id(id, title, body)
         elif command == "delete":
-            id = self.view.ask_note_id()
+            id = self.view.ask_note_id(self.model.notes)
             self.model.delete_note_by_id(id)
+        else:
+            self.view.show_message('Недопустимая команда')
 
     def select_note(self):
         self.model.sort_by_updated_date()

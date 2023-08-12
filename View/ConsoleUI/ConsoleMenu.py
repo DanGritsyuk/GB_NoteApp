@@ -85,7 +85,15 @@ class ConsoleMenu:
         self.runMenu = False
 
     @staticmethod
-    def content_menu(items_menu: list[str], headerText):
+    def get_max_characters_line() -> int:
+        return MenuRender.LINE_MAX_CHARACTER_COUNT
+
+    @staticmethod
+    def content_menu(items_menu: list[str], header_text: str) -> int:
+        return ConsoleMenu.content_menu(items_menu, header_text, 0)
+
+    @staticmethod
+    def content_menu(items_menu: list[str], header_text: str, index: int) -> int:
         menuData = {}
         namesOnPage = []
         pageNumber = 0
@@ -94,10 +102,10 @@ class ConsoleMenu:
             if len(namesOnPage) >= ConsoleMenu.CONSOLE_LINES - 3 or len(
                 namesOnPage
             ) + pageNumber * 10 == len(items_menu):
-                menuData[headerText + " " + str(pageNumber + 1) + ":"] = namesOnPage
+                menuData[header_text + " " + str(pageNumber + 1) + ":"] = namesOnPage
                 namesOnPage = []
                 pageNumber += 1
-        return ConsoleMenu._draw_menu(menuData, 1,  ConsoleMenu.CONSOLE_LINES) - 1
+        return ConsoleMenu._draw_menu(menuData, index + 1,  ConsoleMenu.CONSOLE_LINES) - 1
 
     @staticmethod
     def console_clear():
@@ -106,12 +114,12 @@ class ConsoleMenu:
     @staticmethod
     def yesno_and_cancel_dialog(message):
         menuData = {message: ["Да", "Нет", "Отмена"]}
-        return ConsoleMenu._draw_dialog_menu(menuData, 0)
+        return ConsoleMenu.draw_dialog_menu(menuData, 0)
 
     @staticmethod
     def yesno_dialog(message) -> bool:
         menuData = {message: ["Да", "Нет"]}
-        commandKey = ConsoleMenu._draw_dialog_menu(menuData, 1)
+        commandKey = ConsoleMenu.draw_dialog_menu(menuData, 1)
         return commandKey == 1
 
     @staticmethod
@@ -121,5 +129,5 @@ class ConsoleMenu:
         )
 
     @staticmethod
-    def _draw_dialog_menu(menuData, taskIndex):
+    def draw_dialog_menu(menuData, taskIndex):
         return MenuRender.start_render_memu(menuData, taskIndex, 0, False, False)

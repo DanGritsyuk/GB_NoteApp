@@ -11,7 +11,7 @@ class View(ABC):
         pass
 
     @abstractmethod
-    def show_notes(self, notes):
+    def show_notes(self):
         pass
 
     @abstractmethod
