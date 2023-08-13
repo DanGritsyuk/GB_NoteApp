@@ -1,37 +1,34 @@
-
 from datetime import datetime
 import json
+import os
 from Model.Notes.Comporators.NoteComparatorByUpdateDate import NoteComparatorByUpdateDate
+from Model.Notes.JsonFileHandler import JsonFileHandler
 
 from Model.Notes.Note import Note
 
 
 class NotesList:
     def __init__(self):
-        self.filename = "notes.json"
+        self.filename = "Data\\notes.json"
         self.notes : list[Note] = []
         self.load()
 
     def load(self):
-        try:
-            with open(self.filename, "r") as f:
-                data = json.load(f)
-                for note_data in data:
-                    note = Note(
-                        id=note_data["id"],
-                        title=note_data["title"],
-                        body=note_data["body"],
-                        created=datetime.fromisoformat(note_data["created"]),
-                        updated=datetime.fromisoformat(note_data["updated"]),
-                    )
-                    self.notes.append(note)
-        except FileNotFoundError:
-            pass
+        data = JsonFileHandler.load(self.filename)
+        if data != None:
+            for note_data in data:
+                note = Note(
+                    id=note_data["id"],
+                    title=note_data["title"],
+                    body=note_data["body"],
+                    created=datetime.fromisoformat(note_data["created"]),
+                    updated=datetime.fromisoformat(note_data["updated"]),
+                )
+                self.notes.append(note)
 
     def save(self):
         data = [note.to_dict() for note in self.notes]
-        with open(self.filename, "w") as f:
-            json.dump(data, f)
+        JsonFileHandler.save(self.filename, data)
 
     def add_note(self, title, body):
         id = len(self.notes) + 1

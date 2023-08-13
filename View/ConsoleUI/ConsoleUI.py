@@ -61,12 +61,11 @@ class ConsoleUI(View):
         input('Нажмите Enter ↵ ')
 
     def _started_menu(self):
-        menu_data = {'ГЛАВНОЕ МЕНЮ:': ['НОВАЯ ЗАМЕТКА', 'НАЙТИ ЗАМЕТКУ', 'ВСЕ ЗАМЕТКИ'], '-------': ['ВЫХОД']}
+        menu_data = {'ГЛАВНОЕ МЕНЮ:': ['НОВАЯ ЗАМЕТКА', 'ВСЕ ЗАМЕТКИ'], '-------': ['ВЫХОД']}
         menu = ConsoleMenu(
             menu_data,
             f1=self._create_note,
-            f2=self._method_stub,
-            f3=self._show_notes,
+            f2=self._show_notes,
             f_end=self._app_close,
         )
         menu.selected_menu()
@@ -112,7 +111,3 @@ class ConsoleUI(View):
         print('\033[A', end='')
         print(' ' * ConsoleMenu.get_max_characters_line(), end='')
         print('\b' * ConsoleMenu.get_max_characters_line(), end='')
-
-    def _method_stub(self):
-        self.show_message('Функция в разработке...')
-        self._draw_header()
