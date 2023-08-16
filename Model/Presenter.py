@@ -1,5 +1,4 @@
 from Model.Notes.NotesList import NotesList
-from Model.Notes.Note import Note
 from View.View import View
 
 
@@ -15,11 +14,11 @@ class Presenter:
             title, body = self.view.ask_note_data()
             self.model.add_note(title, body)
         elif command == "update":
-            id = self.view.ask_note_id(self.model.notes)
+            id = self.view.ask_note_id(self.model.get_notes_data_for_menu())
             title, body = self.view.ask_note_data()
             self.model.update_note_by_id(id, title, body)
         elif command == "delete":
-            id = self.view.ask_note_id(self.model.notes)
+            id = self.view.ask_note_id(self.model.get_notes_data_for_menu())
             self.model.delete_note_by_id(id)
         else:
             self.view.show_message('Недопустимая команда')
