@@ -94,18 +94,18 @@ class ConsoleMenu:
 
     @staticmethod
     def content_menu(items_menu: list[str], header_text: str, index: int) -> int:
-        menuData = {}
-        namesOnPage = []
-        pageNumber = 0
+        menu_data = {}
+        names_on_page = []
+        page_number = 0
         for name in items_menu:
-            namesOnPage.append(name)
-            if len(namesOnPage) >= ConsoleMenu.CONSOLE_LINES - 3 or len(
-                namesOnPage
-            ) + pageNumber * 10 == len(items_menu):
-                menuData[header_text + " " + str(pageNumber + 1) + ":"] = namesOnPage
-                namesOnPage = []
-                pageNumber += 1
-        return ConsoleMenu._draw_menu(menuData, index + 1,  ConsoleMenu.CONSOLE_LINES) - 1
+            names_on_page.append(name)
+            if len(names_on_page) >= ConsoleMenu.CONSOLE_LINES - 3 or len(
+                names_on_page
+            ) + page_number * 10 == len(items_menu):
+                menu_data[header_text + " " + str(page_number + 1) + ":"] = names_on_page
+                names_on_page = []
+                page_number += 1
+        return ConsoleMenu._draw_menu(menu_data, index + 1,  ConsoleMenu.CONSOLE_LINES) - 1
 
     @staticmethod
     def console_clear():
@@ -113,21 +113,21 @@ class ConsoleMenu:
 
     @staticmethod
     def yesno_and_cancel_dialog(message):
-        menuData = {message: ["Да", "Нет", "Отмена"]}
-        return ConsoleMenu.draw_dialog_menu(menuData, 0)
+        menu_Data = {message: ["Да", "Нет", "Отмена"]}
+        return ConsoleMenu.draw_dialog_menu(menu_Data, 0)
 
     @staticmethod
     def yesno_dialog(message) -> bool:
-        menuData = {message: ["Да", "Нет"]}
-        commandKey = ConsoleMenu.draw_dialog_menu(menuData, 1)
-        return commandKey == 1
+        menu_data = {message: ["Да", "Нет"]}
+        command_Key = ConsoleMenu.draw_dialog_menu(menu_data, 1)
+        return command_Key == 1
 
     @staticmethod
-    def _draw_menu(menuData, taskId, console_lines):
+    def _draw_menu(menu_Data, task_id, console_lines):
         return MenuRender.start_render_memu(
-            menuData, taskId - 1, console_lines, True, True
+            menu_Data, task_id - 1, console_lines, True, True
         )
 
     @staticmethod
-    def draw_dialog_menu(menuData, taskIndex):
-        return MenuRender.start_render_memu(menuData, taskIndex, 0, False, False)
+    def draw_dialog_menu(menu_data, task_index):
+        return MenuRender.start_render_memu(menu_data, task_index, 0, False, False)

@@ -11,7 +11,7 @@ class ConsoleManager:
         print('\033[A\033[6n')
         buff = ''
 
-        def DelWeedSymbols(line: str) -> str:
+        def del_weed_symbols(line: str) -> str:
             first = 0
             if line[0] < '1' or line[0] > '9':
                 first = 1
@@ -25,7 +25,7 @@ class ConsoleManager:
             buff += msvcrt.getch().decode('ASCII')
             keep_going = msvcrt.kbhit()
 
-        newbuff = DelWeedSymbols(buff.replace('\x1b[', ''))
+        newbuff = del_weed_symbols(buff.replace('\x1b[', ''))
 
         return Point2D(
             int(newbuff.partition(';')[2]),
@@ -33,19 +33,19 @@ class ConsoleManager:
         )
 
     @staticmethod
-    def set_cursor_position(toPosition: Point2D):
-        correntPosition = ConsoleManager.get_cursor_coordinate()
+    def set_cursor_position(to_position: Point2D):
+        corrent_position = ConsoleManager.get_cursor_coordinate()
 
-        yDistance = correntPosition.y - toPosition.y
-        if yDistance > 0:
-            print('\033[A' * yDistance, end='')
+        y_distance = corrent_position.y - to_position.y
+        if y_distance > 0:
+            print('\033[A' * y_distance, end='')
 
-        xDistance = correntPosition.x - toPosition.x
-        if xDistance > 0:
-            print('\033[D' * xDistance, end='')
+        x_distance = corrent_position.x - to_position.x
+        if x_distance > 0:
+            print('\033[D' * x_distance, end='')
 
     @staticmethod
-    def GetKeyEvent() -> str:
+    def get_key_event() -> str:
         match msvcrt.getch():
             case b'\r':
                 return 'enter'
@@ -63,7 +63,7 @@ class ConsoleManager:
                 return 'esc'
 
     @staticmethod
-    def PrintASCIIText(text: str):
+    def print_ASCII_text(text: str):
         print(text)
 
     @staticmethod
