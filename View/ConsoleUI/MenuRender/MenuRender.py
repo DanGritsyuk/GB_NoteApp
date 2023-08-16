@@ -42,7 +42,7 @@ class MenuRender:
                 console_lines,
             )
             current_index = _page.current_line_index
-            _page = list(filter(lambda p: p.pageId == _page.page_id + step, pages_map))[0]
+            _page = list(filter(lambda p: p.page_id == _page.page_id + step, pages_map))[0]
             _page.current_line_index = (
                 current_index
                 if current_index < _page.lines_count
@@ -52,8 +52,8 @@ class MenuRender:
 
         def get_check_coordinates() -> PageData:
             for page in pages_map:
-                if page.startLineIndex <= index < page.startLineIndex + page.linesCount:
-                    page.currentLineIndex = index - page.startLineIndex
+                if page.start_line_index <= index < page.start_line_index + page.lines_count:
+                    page.current_line_index = index - page.start_line_index
                     return page
             raise Exception("Page not found!")
 
